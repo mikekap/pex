@@ -7,7 +7,7 @@ import os
 from collections import Iterable
 
 from .compatibility import string as compatible_string
-from .compatibility import pathname2url
+from .compatibility import pathname2url, url2pathname
 from .compatibility import PY3
 from .compatibility import WINDOWS
 from .util import Memoizer
@@ -105,6 +105,12 @@ class Link(object):
   def path(self):
     """The full path of this url with any hostname and scheme components removed."""
     return self._url.path
+
+  @property
+  def local_path(self):
+    """Returns the local filesystem path (only works for file:// urls)."""
+    assert self.local
+    return url2pathname(self.path)
 
   @property
   def url(self):
