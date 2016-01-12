@@ -15,7 +15,7 @@ from pex.common import safe_mkdir
 from pex.compatibility import nested
 from pex.installer import EggInstaller, WheelInstaller
 from pex.pex_builder import PEXBuilder
-from pex.testing import make_bdist, temporary_content, write_zipfile
+from pex.testing import make_bdist, temporary_content, write_zipfile, run_simple_pex
 from pex.util import CacheHelper, DistributionHelper, named_temporary_file
 
 try:
@@ -147,18 +147,13 @@ def test_access_zipped_assets_integration():
     pex = os.path.join(td2, 'app.pex')
     pb.build(pex)
 
-    po = subprocess.Popen(
-        [pex],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT)
-    po.wait()
-    output = po.stdout.read()
+    output, returncode = run_simple_pex(pex)
     try:
       output = output.decode('UTF-8')
     except ValueError:
       pass
     assert output == 'accessed\n'
-    assert po.returncode == 0
+    assert returncode == 0
 
 
 def test_named_temporary_file():
