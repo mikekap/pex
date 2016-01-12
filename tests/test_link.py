@@ -51,7 +51,7 @@ def test_link_schemes():
   link = Link('/foo/bar')
   assert link.scheme == 'file'
   assert link.local
-  assert link.path == os.path.realpath('/foo/bar')
+  assert link.local_path == os.path.realpath('/foo/bar')
 
 
 def test_link_equality():
