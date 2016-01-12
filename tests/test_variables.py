@@ -6,6 +6,7 @@ import tempfile
 import pytest
 
 from pex.variables import Variables
+from pex.util import named_temporary_file
 
 
 def test_process_pydoc():
@@ -85,7 +86,7 @@ def test_pex_get_kv():
 
 
 def test_pex_from_rc():
-  with tempfile.NamedTemporaryFile(mode='w') as pexrc:
+  with named_temporary_file(mode='w') as pexrc:
     pexrc.write('HELLO=42')
     pexrc.flush()
     v = Variables(rc=pexrc.name)
@@ -93,7 +94,7 @@ def test_pex_from_rc():
 
 
 def test_pexrc_precedence():
-  with tempfile.NamedTemporaryFile(mode='w') as pexrc:
+  with named_temporary_file(mode='w') as pexrc:
     pexrc.write('HELLO=FORTYTWO')
     pexrc.flush()
     v = Variables(environ={'HELLO': 42}, rc=pexrc.name)
@@ -101,7 +102,7 @@ def test_pexrc_precedence():
 
 
 def test_rc_ignore():
-  with tempfile.NamedTemporaryFile(mode='w') as pexrc:
+  with named_temporary_file(mode='w') as pexrc:
     pexrc.write('HELLO=FORTYTWO')
     pexrc.flush()
     v = Variables(environ={'PEX_IGNORE_RCFILES': 'True'}, rc=pexrc.name)

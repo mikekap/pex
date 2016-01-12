@@ -4,9 +4,10 @@
 import os
 import sys
 
-from twitter.common.contextutil import environment_as, temporary_dir, temporary_file
+from twitter.common.contextutil import environment_as, temporary_dir
 
 from pex.testing import run_simple_pex_test
+from pex.util import named_temporary_file
 
 
 def test_pex_execute():
@@ -21,7 +22,7 @@ def test_pex_raise():
 
 
 def test_pex_interpreter():
-  with temporary_file() as fp:
+  with named_temporary_file() as fp:
     fp.write(b"print('Hello world')")
     fp.flush()
 

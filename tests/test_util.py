@@ -9,7 +9,7 @@ import zipfile
 from hashlib import sha1
 from textwrap import dedent
 
-from twitter.common.contextutil import temporary_dir, temporary_file
+from twitter.common.contextutil import temporary_dir
 
 from pex.common import safe_mkdir
 from pex.compatibility import nested
@@ -27,17 +27,17 @@ except ImportError:
 def test_hash():
   empty_hash = sha1().hexdigest()
 
-  with temporary_file() as fp:
+  with named_temporary_file() as fp:
     fp.flush()
     assert empty_hash == CacheHelper.hash(fp.name)
 
-  with temporary_file() as fp:
+  with named_temporary_file() as fp:
     string = b'asdf' * 1024 * sha1().block_size + b'extra padding'
     fp.write(string)
     fp.flush()
     assert sha1(string).hexdigest() == CacheHelper.hash(fp.name)
 
-  with temporary_file() as fp:
+  with named_temporary_file() as fp:
     empty_hash = sha1()
     fp.write(b'asdf')
     fp.flush()
@@ -59,7 +59,7 @@ def test_hash_consistency():
   for reverse in (False, True):
     with temporary_content(CONTENT) as td:
       dir_hash = CacheHelper.dir_hash(td)
-      with temporary_file() as tf:
+      with named_temporary_file() as tf:
         write_zipfile(td, tf.name, reverse=reverse)
         with contextlib.closing(zipfile.ZipFile(tf.name, 'r')) as zf:
           zip_hash = CacheHelper.zip_hash(zf)

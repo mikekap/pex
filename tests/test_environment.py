@@ -4,13 +4,14 @@
 import os
 from contextlib import contextmanager
 
-from twitter.common.contextutil import temporary_dir, temporary_file
+from twitter.common.contextutil import temporary_dir
 
 from pex.compatibility import nested
 from pex.environment import PEXEnvironment
 from pex.pex_builder import PEXBuilder
 from pex.pex_info import PexInfo
 from pex.testing import make_bdist
+from pex.util import named_temporary_file
 
 
 @contextmanager
@@ -22,7 +23,7 @@ def yield_pex_builder(zip_safe=True):
 
 
 def test_force_local():
-  with nested(yield_pex_builder(), temporary_dir(), temporary_file()) as (pb, pex_root, pex_file):
+  with nested(yield_pex_builder(), temporary_dir(), named_temporary_file()) as (pb, pex_root, pex_file):
     pb.info.pex_root = pex_root
     pb.build(pex_file.name)
 
@@ -42,7 +43,7 @@ def normalize(path):
 
 def test_write_zipped_internal_cache():
   # zip_safe pex will not be written to install cache unless always_write_cache
-  with nested(yield_pex_builder(zip_safe=True), temporary_dir(), temporary_file()) as (
+  with nested(yield_pex_builder(zip_safe=True), temporary_dir(), named_temporary_file()) as (
       pb, pex_root, pex_file):
 
     pb.info.pex_root = pex_root
@@ -67,7 +68,7 @@ def test_write_zipped_internal_cache():
     assert normalize(existing[0].location).startswith(normalize(pb.info.install_cache))
 
   # non-zip_safe pex will be written to install cache
-  with nested(yield_pex_builder(zip_safe=False), temporary_dir(), temporary_file()) as (
+  with nested(yield_pex_builder(zip_safe=False), temporary_dir(), named_temporary_file()) as (
       pb, pex_root, pex_file):
 
     pb.info.pex_root = pex_root
