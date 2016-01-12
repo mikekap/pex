@@ -4,11 +4,12 @@
 from __future__ import absolute_import
 
 import os
-import posixpath
 from collections import Iterable
 
 from .compatibility import string as compatible_string
+from .compatibility import pathname2url
 from .compatibility import PY3
+from .compatibility import WINDOWS
 from .util import Memoizer
 
 if PY3:
@@ -52,7 +53,7 @@ class Link(object):
 
   @classmethod
   def _normalize(cls, filename):
-    return 'file://' + os.path.realpath(os.path.expanduser(filename))
+    return 'file:' + pathname2url(os.path.realpath(os.path.expanduser(filename)))
 
   # A cache for the result of from_filename
   _FROM_FILENAME_CACHE = Memoizer()
@@ -73,6 +74,9 @@ class Link(object):
     """
     purl = urlparse.urlparse(url)
     if purl.scheme == '':
+      purl = urlparse.urlparse(self._normalize(url))
+    elif WINDOWS and len(purl.scheme) == 1:
+      # This is likely a drive letter.
       purl = urlparse.urlparse(self._normalize(url))
     self._url = purl
 
@@ -95,7 +99,7 @@ class Link(object):
   @property
   def filename(self):
     """The basename of this url."""
-    return posixpath.basename(self._url.path)
+    return os.path.basename(self._url.path)
 
   @property
   def path(self):
