@@ -211,9 +211,9 @@ class Packager(DistributionPackager):
 
   def _setup_command(self):
     if WINDOWS:
-      return ['sdist', '--formats=gztar', '--dist-dir=%s' % self._install_tmp]
-    else:
       return ['sdist', '--formats=zip', '--dist-dir=%s' % self._install_tmp]
+    else:
+      return ['sdist', '--formats=gztar', '--dist-dir=%s' % self._install_tmp]
 
   @after_installation
   def sdist(self):
