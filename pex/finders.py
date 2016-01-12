@@ -173,7 +173,9 @@ def find_eggs_in_zip(importer, path_item, only=False):
     # Defer to wheel importer
     return
   metadata = FixedEggMetadata(importer)
+  print 'find_eggs_in_zip', list(metadata.resource_listdir('/')), list(metadata.resource_listdir(''))
   if metadata.has_metadata('PKG-INFO'):
+    print 'Has metadata'
     yield pkg_resources.Distribution.from_filename(path_item, metadata=metadata)
   if only:
     return  # don't yield nested distros
