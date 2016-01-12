@@ -103,7 +103,7 @@ def test_pex_builder_compilation():
     build_and_check(td3, True)
 
 
-@pytest.mark.skipIf(WINDOWS, reason='We only copy on windows')
+@pytest.mark.skipIf(WINDOWS, reason='No hardlinks on windows')
 def test_pex_builder_copy_or_link():
   with nested(temporary_dir(), temporary_dir(), temporary_dir()) as (td1, td2, td3):
     src = os.path.join(td1, 'exe.py')

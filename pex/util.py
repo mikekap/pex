@@ -93,6 +93,7 @@ class DistributionHelper(object):
       distributions = list(find_distributions(path))
       if len(distributions) == 1:
         return distributions[0]
+      print 'Didnt find', distributions
     else:
       for dist in find_distributions(path):
         if dist.project_name == name:
