@@ -168,7 +168,7 @@ def run_simple_pex(pex, args=(), env=None):
       stderr=subprocess.STDOUT,
       env=env)
   po.wait()
-  return po.stdout.read(), po.returncode
+  return po.stdout.read().replace(b'\r', b''), po.returncode
 
 
 def run_simple_pex_test(body, args=(), env=None, dists=None, coverage=False):

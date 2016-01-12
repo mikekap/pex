@@ -56,7 +56,7 @@ class PageParser(object):
       if href_match:
         href = cls.href_match_to_url(href_match)
         parsed_href = urlparse(href)
-        if any(parsed_href.filename.endswith(ext) for ext in cls.REL_SKIP_EXTENSIONS):
+        if any(parsed_href.path.endswith(ext) for ext in cls.REL_SKIP_EXTENSIONS):
           continue
         yield href
 
