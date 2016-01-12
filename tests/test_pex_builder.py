@@ -5,11 +5,12 @@ import os
 import stat
 import zipfile
 from contextlib import closing
+import pytest
 
 from twitter.common.contextutil import temporary_dir
 from twitter.common.dirutil import safe_mkdir
 
-from pex.compatibility import nested
+from pex.compatibility import nested, WINDOWS
 from pex.pex import PEX
 from pex.pex_builder import PEXBuilder
 from pex.testing import write_simple_pex as write_pex
@@ -102,6 +103,7 @@ def test_pex_builder_compilation():
     build_and_check(td3, True)
 
 
+@pytest.mark.skipIf(WINDOWS, reason='We only copy on windows')
 def test_pex_builder_copy_or_link():
   with nested(temporary_dir(), temporary_dir(), temporary_dir()) as (td1, td2, td3):
     src = os.path.join(td1, 'exe.py')
