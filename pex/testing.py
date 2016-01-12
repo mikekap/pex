@@ -118,7 +118,7 @@ def make_bdist(name='my_project', installer_impl=EggInstaller, zipped=False, zip
     if zipped:
       dist = DistributionHelper.distribution_from_path(dist_location)
       if dist is None:
-          with open(dist, 'rb'):
+          with open(dist_location, 'rb'):
               pass
           assert False, "Could not find bdist at: %s (exists %s)" % (
               dist_location, os.path.exists(dist_location))
