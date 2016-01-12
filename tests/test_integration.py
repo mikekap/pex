@@ -36,7 +36,7 @@ def test_pex_interpreter():
     assert rc == 0
 
 
-@pytest.mark.skipif(WINDOWS)
+@pytest.mark.skipif(WINDOWS, reason='No symlinks on windows')
 def test_pex_python_symlink():
   with temporary_dir() as td:
     with environment_as(HOME=td):
