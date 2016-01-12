@@ -2,10 +2,12 @@
 # Licensed under the Apache License, Version 2.0 (see LICENSE).
 
 import os
+import pytest
 import sys
 
 from twitter.common.contextutil import environment_as, temporary_dir
 
+from pex.compatibility import WINDOWS
 from pex.testing import run_simple_pex_test
 from pex.util import named_temporary_file
 
@@ -34,6 +36,7 @@ def test_pex_interpreter():
     assert rc == 0
 
 
+@pytest.mark.skipif(WINDOWS)
 def test_pex_python_symlink():
   with temporary_dir() as td:
     with environment_as(HOME=td):

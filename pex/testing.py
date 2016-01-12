@@ -7,6 +7,7 @@ import random
 import subprocess
 import tempfile
 import zipfile
+import sys
 from textwrap import dedent
 
 from .common import safe_mkdir, safe_rmtree
@@ -162,7 +163,7 @@ def write_simple_pex(td, exe_contents, dists=None, coverage=False):
 # TODO(wickman) Why not PEX.run?
 def run_simple_pex(pex, args=(), env=None):
   po = subprocess.Popen(
-      [pex] + list(args),
+      [sys.executable, pex] + list(args),
       stdout=subprocess.PIPE,
       stderr=subprocess.STDOUT,
       env=env)
