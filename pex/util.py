@@ -119,7 +119,9 @@ class CacheHelper(object):
   @classmethod
   def _compute_hash(cls, names, stream_factory):
     digest = sha1()
-    digest.update(''.join(names).encode('utf-8'))
+    # Always use / as the path separator, since that's what zip uses.
+    hashed_names = [n.replace(os.sep, '/') for n in names]
+    digest.update(''.join(hashed_names).encode('utf-8'))
     for name in names:
       with contextlib.closing(stream_factory(name)) as fp:
         cls.update_hash(fp, digest)
@@ -133,14 +135,12 @@ class CacheHelper(object):
                    if name.startswith(prefix) and not name.endswith('.pyc') and
                       name[-1] not in ('/', '\\'))
     def stream_factory(name):
-      print 'Hash', prefix + name
       return zf.open(prefix + name)
-    print 'zip'
     return cls._compute_hash(names, stream_factory)
 
   @classmethod
   def _iter_files(cls, directory):
-    normpath = os.path.normpath(directory)
+    normpath = os.path.realpath(os.path.normpath(directory))
     for root, _, files in os.walk(normpath):
       for f in files:
         yield os.path.relpath(os.path.join(root, f), normpath)
@@ -158,9 +158,7 @@ class CacheHelper(object):
     """Return a reproducible hash of the contents of a directory."""
     names = sorted(f for f in cls._iter_files(d) if not f.endswith('.pyc'))
     def stream_factory(name):
-      print 'Hash', os.path.join(d, name)
       return open(os.path.join(d, name), 'rb')  # noqa: T802
-    print 'dir'
     return cls._compute_hash(names, stream_factory)
 
   @classmethod
