@@ -51,7 +51,13 @@ def test_link_schemes():
   link = Link('/foo/bar')
   assert link.scheme == 'file'
   assert link.local
-  assert link.path == os.path.realpath('/foo/bar')
+  assert link.local_path == os.path.realpath('/foo/bar')
+
+  # Check that local paths with # aren't treated as fragments.
+  link = Link('/foo/bar#baz.pex')
+  assert link.scheme == 'file'
+  assert link.local
+  assert link.local_path == os.path.realpath('/foo/bar#baz.pex')
 
 
 def test_link_equality():
