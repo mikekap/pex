@@ -133,7 +133,9 @@ class CacheHelper(object):
                    if name.startswith(prefix) and not name.endswith('.pyc') and
                       name[-1] not in ('/', '\\'))
     def stream_factory(name):
+      print 'Hash', prefix + name
       return zf.open(prefix + name)
+    print 'zip'
     return cls._compute_hash(names, stream_factory)
 
   @classmethod
@@ -156,7 +158,9 @@ class CacheHelper(object):
     """Return a reproducible hash of the contents of a directory."""
     names = sorted(f for f in cls._iter_files(d) if not f.endswith('.pyc'))
     def stream_factory(name):
+      print 'Hash', os.path.join(d, name)
       return open(os.path.join(d, name), 'rb')  # noqa: T802
+    print 'dir'
     return cls._compute_hash(names, stream_factory)
 
   @classmethod
