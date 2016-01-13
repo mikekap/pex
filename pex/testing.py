@@ -14,7 +14,7 @@ from .common import safe_mkdir, safe_rmtree
 from .compatibility import nested
 from .installer import EggInstaller, Packager
 from .pex_builder import PEXBuilder
-from .util import DistributionHelper
+from .util import DistributionHelper, named_temporary_file
 
 
 @contextlib.contextmanager
@@ -24,6 +24,19 @@ def temporary_dir():
     yield td
   finally:
     safe_rmtree(td)
+
+
+@contextlib.contextmanager
+def temporary_filename():
+    """Creates a temporary filename.
+
+    This is useful when you need to pass a filename to an API. Windows requires all
+    handles to a file be closed before deleting/renaming it, so this makes it a bit
+    simpler."""
+    with named_temporary_file() as fp:
+        fp.write(b'')
+        fp.close()
+        yield fp.name
 
 
 def random_bytes(length):

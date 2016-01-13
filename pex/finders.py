@@ -171,7 +171,6 @@ def find_eggs_in_zip(importer, path_item, only=False):
     # Defer to wheel importer
     return
   metadata = FixedEggMetadata(importer)
-  print 'egg zip', metadata.egg_info, metadata.egg_root, metadata.egg_name
   if metadata.has_metadata('PKG-INFO'):
     yield pkg_resources.Distribution.from_filename(path_item, metadata=metadata)
   if only:
