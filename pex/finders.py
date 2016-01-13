@@ -136,6 +136,7 @@ class FixedEggMetadata(pkg_resources.EggMetadata):
     return '/'.join(self.normalized_elements(original_fn))
 
   def _zipinfo_name(self, fspath):
+    # Make sure to not normalize the zip_pre - that's an OS-native path.
     if fspath.startswith(self.zip_pre):
       return '/'.join(self.normalized_elements(fspath[len(self.zip_pre):]))
     assert "%s is not a subpath of %s" % (fspath, self.zip_pre)

@@ -129,22 +129,13 @@ def make_bdist(name='my_project', installer_impl=EggInstaller, zipped=False, zip
   with make_installer(name=name, installer_impl=installer_impl, zip_safe=zip_safe) as installer:
     dist_location = installer.bdist()
     if zipped:
-      dist = DistributionHelper.distribution_from_path(dist_location)
-      if dist is None:
-          with open(dist_location, 'rb'):
-              pass
-          assert False, "Could not find bdist at: %s (exists %s)" % (
-              dist_location, os.path.exists(dist_location))
-      yield dist
+      yield DistributionHelper.distribution_from_path(dist_location)
     else:
       with temporary_dir() as td:
         extract_path = os.path.join(td, os.path.basename(dist_location))
         with contextlib.closing(zipfile.ZipFile(dist_location)) as zf:
           zf.extractall(extract_path)
-        dist = DistributionHelper.distribution_from_path(extract_path)
-        assert dist is not None, "Could not find bdist at: %s (exists %s)" % (
-            dist_location, os.path.exists(dist_location))
-        yield dist
+        yield DistributionHelper.distribution_from_path(extract_path)
 
 
 COVERAGE_PREAMBLE = """

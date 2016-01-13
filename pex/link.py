@@ -4,6 +4,7 @@
 from __future__ import absolute_import
 
 import os
+import posixpath
 from collections import Iterable
 
 from .compatibility import string as compatible_string
@@ -99,7 +100,7 @@ class Link(object):
   @property
   def filename(self):
     """The basename of this url."""
-    return os.path.basename(self._url.path)
+    return posixpath.basename(self._url.path)
 
   @property
   def path(self):

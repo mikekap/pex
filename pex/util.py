@@ -132,8 +132,7 @@ class CacheHelper(object):
     """Return the hash of the contents of a zipfile, comparable with a cls.dir_hash."""
     prefix_length = len(prefix)
     names = sorted(name[prefix_length:] for name in zf.namelist()
-                   if name.startswith(prefix) and not name.endswith('.pyc') and
-                      name[-1] not in ('/', '\\'))
+        if name.startswith(prefix) and not name.endswith('.pyc') and not name.endswith('/'))
     def stream_factory(name):
       return zf.open(prefix + name)
     return cls._compute_hash(names, stream_factory)
@@ -171,7 +170,7 @@ class CacheHelper(object):
     if not os.path.exists(target_dir):
       target_dir_tmp = target_dir + '.' + uuid.uuid4().hex
       for name in zf.namelist():
-        if name.startswith(source) and not name.endswith('/') and not name.endswith('\\'):
+        if name.startswith(source) and not name.endswith('/'):
           # strip off prefix + '/'
           target_name = os.path.join(dependency_basename, name[len(source) + 1:])
           with contextlib.closing(zf.open(name)) as zi:
